@@ -75,7 +75,7 @@ adminRouter.post("/map",adminMiddleware,async(req,res)=>{
             width:parseInt(parsedInput.data.dimensions.split("x")[0]),
             name:parsedInput.data.name,
             mapElements: {
-                create:parsedInput.data.defaultElements.map(e =>({
+                create:parsedInput.data.defaultElements.map((e:any) =>({
                     elementId:e.elementId,
                     x:e.x,
                     y:e.y
