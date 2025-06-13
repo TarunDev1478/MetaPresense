@@ -8,6 +8,7 @@ const Signup: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [type,setRole]= useState("User");
+    const url = process.env.api
     const Navigate = useNavigate();
     const handleSignup = async (e: React.MouseEvent) => {
         e.preventDefault();  // Add this to prevent form submission
@@ -16,7 +17,7 @@ const Signup: React.FC = () => {
             console.log(password);
             console.log(type);
     
-            const response = await fetch("http://localhost:3000/api/v1/signup", {
+            const response = await fetch(`${url}/api/v1/signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

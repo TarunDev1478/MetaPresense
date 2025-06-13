@@ -285,11 +285,11 @@ const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([])
     };
   }, []);
 
-
+  const url = process.env.api;
   useEffect(() => {
     const getSpace = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/v1/space/${spaceId}`, {
+        const response = await fetch(`${url}/api/v1/space/${spaceId}`, {
           method: "GET",
         });
         const data = await response.json();
@@ -836,9 +836,9 @@ const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([])
 
       if (
         worldX >= centerX &&
-        worldX <= centerX + 50 &&
+        worldX <= centerX + 100 &&
         worldY >= centerY &&
-        worldY <= centerY + 50
+        worldY <= centerY + 100
       ) {
         setSelectedCharacter({
           userId: currentUser.userId,
@@ -1538,7 +1538,7 @@ const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([])
     </button>
   </div>
 )}
-{inroom > 0 && (
+{/* {inroom > 0 && (
   <div
     style={{
       display: "flex",
@@ -1571,7 +1571,7 @@ const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([])
       Room {inroom} Call
     </span>
   </div>
-)}
+)} */}
       <div
         style={{
           height: "100vh",
@@ -2131,7 +2131,7 @@ const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([])
     style={{
       position: 'absolute',
       top: '20px',
-      right: '20px',
+      left: '60px',
       width: '320px',
       background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
       backdropFilter: 'blur(20px) saturate(180%)',
