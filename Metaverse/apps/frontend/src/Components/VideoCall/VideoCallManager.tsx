@@ -33,6 +33,7 @@ export class VideoCallManager extends EventEmitter {
   async startCall(targetUserId?: string, roomId?: Number): Promise<string> {
     try {
       // Get user media
+      console.log(this.isInitiator)
       this.localStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true

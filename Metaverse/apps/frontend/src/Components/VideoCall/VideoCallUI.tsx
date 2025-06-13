@@ -700,7 +700,7 @@ export const VideoCallUI: React.FC<VideoCallUIProps> = ({
 };
 
 // Updated Remote Video Component
-const RemoteVideo: React.FC<{ userId: string; stream: MediaStream; isLarge: boolean }> = ({ userId, stream, isLarge }) => {
+const RemoteVideo: React.FC<{ userId: string; stream: MediaStream; isLarge: boolean }> = ({  stream, isLarge }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {

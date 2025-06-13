@@ -1,4 +1,4 @@
-import { useState } from 'react'
+
 
 import './App.css'
 import Game from './Components/Game.tsx'
@@ -9,7 +9,7 @@ import NavBar from './Components/NavBar'
 import About from './Components/About.tsx'
 import { Routes } from 'react-router-dom'
 import Contact from './Components/Contact.tsx'
-import { Navigate, Route, useLocation } from "react-router-dom";
+import {  Route, useLocation } from "react-router-dom";
 import Explore from './Components/Explore.tsx'
 
 function App() {
