@@ -259,7 +259,7 @@ const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([])
     setParams({ token, spaceId,roomId });
     setId(spaceId);
 
-    wsRef.current = new WebSocket('ws://localhost:8080'); 
+    wsRef.current = new WebSocket('wss://metapresense-wsserver.onrender.com'); 
 
     wsRef.current.onopen = () => {
  
