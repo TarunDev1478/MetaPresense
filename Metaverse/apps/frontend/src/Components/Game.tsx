@@ -1,21 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import MessageIcon from '@mui/icons-material/Message';
-import SendIcon from '@mui/icons-material/Send';
-import CloseIcon from '@mui/icons-material/Close';
+
 import {VideoCallUI} from './VideoCall/VideoCallUI.tsx'
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { compareSync } from 'bcrypt';
+
 // Define interfaces for your types
-interface Element {
-  id: string;
-  x: number;
-  y: number;
-  element: {
-    imageUrl: string;
-    width: number;
-    height: number;
-  };
-}
+
 
 interface Message {
   id: number;
@@ -53,7 +42,7 @@ const Arena = () => {
 
   const wsRef = useRef<any>(null);
   const [isInVideoCall, setIsInVideoCall] = useState(false);
-const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([]);
+  const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([]);
   const [currentUser, setCurrentUser] = useState<any>({});
   const [users, setUsers] = useState(new Map());
   const [params, setParams] = useState({ token: '', spaceId: '',roomId:'' });
@@ -326,7 +315,6 @@ const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([])
     }
   }, [elements]);
 
-  //function to find in which room current user is
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
@@ -388,6 +376,10 @@ const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([])
 
 
   const handleWebSocketMessage = (message: any) => {
+    console.log(isInVideoCall);
+    console.log(videoCallParticipants);
+    console.log(messages)
+    console.log(position12);
     console.log(message);
     switch (message.type) {
       case 'space-joined':

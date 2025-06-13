@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+import { GoogleOAuthProvider} from "@react-oauth/google";
+
 import { useNavigate } from "react-router-dom";
 const GOOGLE_CLIENT_ID = "689126264395-mqkr9144r9nbhhbldrbrejeequtaf4fu.apps.googleusercontent.com"; // Replace with your Google Client ID
 
