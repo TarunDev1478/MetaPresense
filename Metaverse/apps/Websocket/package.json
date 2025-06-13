@@ -17,7 +17,9 @@
     "@types/ws": "^8.18.1",
     "jsonwebtoken": "^9.0.2",
     "ws": "^8.18.0",
-    "@prisma/client": "^5.22.0"
+    "@prisma/client": "^5.22.0",
+    "@types/express": "^5.0.0",
+    "express": "^4.21.1"
   },
   "prisma": {
     "schema": "../../packages/db/prisma/schema.prisma"
