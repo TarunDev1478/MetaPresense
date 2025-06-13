@@ -12,7 +12,7 @@ const NavBar = () => {
     const token = localStorage.getItem('token');
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const navigate = useNavigate();
-    const url = process.env.api
+    
     // Get user info from localStorage (you might store this when user logs in)
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
@@ -29,7 +29,7 @@ const NavBar = () => {
     useEffect(() => {
         const fetchUserData = async () => {
           try {
-            const response = await fetch(`${url}/api/v1/user/me`, {
+            const response = await fetch(`https://metapresense.onrender.com/api/v1/user/me`, {
               method: 'GET',
               headers: {
                 'Authorization': `Bearer ${token}`

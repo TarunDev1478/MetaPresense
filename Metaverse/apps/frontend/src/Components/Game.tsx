@@ -274,11 +274,11 @@ const Arena = () => {
     };
   }, []);
 
-  const url = process.env.api;
+  
   useEffect(() => {
     const getSpace = async () => {
       try {
-        const response = await fetch(`${url}/api/v1/space/${spaceId}`, {
+        const response = await fetch(`https://metapresense.onrender.com/api/v1/space/${spaceId}`, {
           method: "GET",
         });
         const data = await response.json();

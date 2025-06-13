@@ -8,12 +8,12 @@ const GOOGLE_CLIENT_ID = "689126264395-mqkr9144r9nbhhbldrbrejeequtaf4fu.apps.goo
 const Login: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const url = process.env.api
+
     const Navigate = useNavigate();
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${url}/api/v1/signin`, {
+            const response = await axios.post(`https://metapresense.onrender.com/api/v1/signin`, {
                 username,
                 password,
             });
