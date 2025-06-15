@@ -84,7 +84,7 @@ const Arena = () => {
   const [direction, setDirection] = useState<'left' | 'right' | 'up' | 'down'>('right');
   const [isMoving, setIsMoving] = useState(false);
   // const [px, setpx] = useState<any>(new Map());
-  const frameRate1 = 30;
+  const frameRate1 = 100;
   const frameRate2 = 80;
   const [elementImages, setElementImages] = useState<Map<string, any>>(new Map());
   const privateMessages = selectedUser ? (privateMessageStore[selectedUser] || []) : [];
@@ -192,18 +192,18 @@ const Arena = () => {
 
       // Load directional sprites (15 images each)
       for (let i = 1; i <= 15; i++) {
-        loadImage(`/images/Le/r${i}.png`, leftSprites, `Left Sprite ${i}`);
-        loadImage(`/images/Right/r${i}.png`, rightSprites, `Right Sprite ${i}`);
-        loadImage(`/images/back/r${i}.png`, backSprites, `Back Sprite ${i}`);
-        loadImage(`/images/Front/r${i}.png`, frontSprites, `Front Sprite ${i}`);
-        loadImage(`/images/Le/${i}.png`, leftIdleSprites, `Left Idle ${i}`);
-        loadImage(`/images/Right/${i}.png`, rightIdleSprites, `Right Idle ${i}`);
-        loadImage(`/images/back/${i}.png`, backIdleSprites, `Back Idle ${i}`);
+        loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/l${i}.png`, leftSprites, `Left Sprite ${i}`);
+        loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/r${i}.png`, rightSprites, `Right Sprite ${i}`);
+        loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/b${i}.png`, backSprites, `Back Sprite ${i}`);
+        loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/f${i}.png`, frontSprites, `Front Sprite ${i}`);
+        loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/left/${i}.png`, leftIdleSprites, `Left Idle ${i}`);
+        loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/right/${i}.png`, rightIdleSprites, `Right Idle ${i}`);
+        loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/${i}.png`, backIdleSprites, `Back Idle ${i}`);
       }
 
       // Load idle front sprites (14 images)
       for (let i = 1; i <= 14; i++) {
-        loadImage(`/images/Front/${i}.png`, frontIdleSprites, `Front Idle ${i}`);
+        loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/front/${i}.png`, frontIdleSprites, `Front Idle ${i}`);
       }
     };
 
