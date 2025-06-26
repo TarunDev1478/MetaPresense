@@ -3,14 +3,16 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import axios from "axios";
 // import "./index.css"
 import { useNavigate } from "react-router-dom";
+import MetaPresenceLoading from "./MetaPresenceLoading";
 const GOOGLE_CLIENT_ID = "689126264395-mqkr9144r9nbhhbldrbrejeequtaf4fu.apps.googleusercontent.com"; // Replace with your Google Client ID
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
+    const [loading, setLoading] = useState(false);
     const Navigate = useNavigate();
     const handleSignIn = async (e: React.FormEvent) => {
+        setLoading(true);
         e.preventDefault();
         try {
             const response = await axios.post(`https://metapresense.onrender.com/api/v1/signin`, {
@@ -26,11 +28,17 @@ const Login: React.FC = () => {
         } catch (error) {
             alert("Login failed. Check credentials.");
             console.error("Error:", error);
+        }finally{
+            setLoading(false);
         }
     };
 
   
-
+    if(loading){
+        return(
+            <MetaPresenceLoading/>
+        )   
+    }
     return (
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <div style={{ display: 'flex', textAlign: 'center', width: "100vw", height: "100vh" }} >

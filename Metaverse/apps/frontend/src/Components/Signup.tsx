@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { GoogleOAuthProvider} from "@react-oauth/google";
 
 import { useNavigate } from "react-router-dom";
+import MetaPresenceLoading from "./MetaPresenceLoading";
 const GOOGLE_CLIENT_ID = "689126264395-mqkr9144r9nbhhbldrbrejeequtaf4fu.apps.googleusercontent.com"; // Replace with your Google Client ID
 
 const Signup: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [type,setRole]= useState("User");
+    const [loading,setLoading]=useState(false);
     const Navigate = useNavigate();
     const handleSignup = async (e: React.MouseEvent) => {
+        setLoading(true);
         e.preventDefault();  // Add this to prevent form submission
       
             console.log(username);
@@ -34,15 +37,21 @@ const Signup: React.FC = () => {
                 alert("Signup successful! UserId: " + data.userId);  // Changed to match backend response
                 console.log("User ID:", data.userId);
                 Navigate('/login');
+                setLoading(false);
             }
             else{
                 const data= await response.json();
                 console.log(data.Message)
                 alert(data.Message);
+                setLoading(false);
             }
     };
     
-
+    if (loading) {
+        return (
+          <MetaPresenceLoading/>
+        );
+      }
    
 
     return (

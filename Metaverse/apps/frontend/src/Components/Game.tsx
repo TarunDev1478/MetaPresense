@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import MessageIcon from '@mui/icons-material/Message';
 
 import {VideoCallUI} from './VideoCall/VideoCallUI.tsx'
+import MetaPresenceLoading from './MetaPresenceLoading.tsx';
 
 // Define interfaces for your types
 
@@ -39,7 +40,8 @@ interface User {
 const Arena = () => {
   const canvasRef = useRef<any>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); 
   const wsRef = useRef<any>(null);
   const [isInVideoCall, setIsInVideoCall] = useState(false);
   const [videoCallParticipants, setVideoCallParticipants] = useState<string[]>([]);
@@ -84,7 +86,7 @@ const Arena = () => {
   const [direction, setDirection] = useState<'left' | 'right' | 'up' | 'down'>('right');
   const [isMoving, setIsMoving] = useState(false);
   // const [px, setpx] = useState<any>(new Map());
-  const frameRate1 = 100;
+  const frameRate1 = 30;
   const frameRate2 = 80;
   const [elementImages, setElementImages] = useState<Map<string, any>>(new Map());
   const privateMessages = selectedUser ? (privateMessageStore[selectedUser] || []) : [];
@@ -143,6 +145,7 @@ const Arena = () => {
   // }, [privateMessageStore, broadcastMessages]);
   useEffect(() => {
     const loadSprites = () => {
+      setLoading(true);
       const leftSprites: HTMLImageElement[] = [];
       const rightSprites: HTMLImageElement[] = [];
       const backSprites: HTMLImageElement[] = [];
@@ -153,7 +156,7 @@ const Arena = () => {
       const frontIdleSprites: HTMLImageElement[] = [];
       let totalImages = 15 * 7 + 14; // Total images to load
       let imagesLoaded = 0;
-
+  
       const checkAllImagesLoaded = () => {
         if (imagesLoaded === totalImages) {
           setSprites({
@@ -167,9 +170,10 @@ const Arena = () => {
             down: frontSprites,
           });
           console.log("All images loaded successfully.");
+          setLoading(false); // Move this here - only set loading to false when all images are loaded
         }
       };
-
+  
       const loadImage = (
         src: string,
         targetArray: HTMLImageElement[],
@@ -189,7 +193,7 @@ const Arena = () => {
           checkAllImagesLoaded();
         };
       };
-
+  
       // Load directional sprites (15 images each)
       for (let i = 1; i <= 15; i++) {
         loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/l${i}.png`, leftSprites, `Left Sprite ${i}`);
@@ -200,16 +204,14 @@ const Arena = () => {
         loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/right/${i}.png`, rightIdleSprites, `Right Idle ${i}`);
         loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/${i}.png`, backIdleSprites, `Back Idle ${i}`);
       }
-
-      // Load idle front sprites (14 images)
+  
       for (let i = 1; i <= 14; i++) {
         loadImage(`https://res.cloudinary.com/diusllbsz/image/upload/v1749851176/front/${i}.png`, frontIdleSprites, `Front Idle ${i}`);
       }
     };
-
+  
     loadSprites();
   }, []);
-
   useEffect(() => {
     // if (!isMoving) return;
 
@@ -277,16 +279,22 @@ const Arena = () => {
   
   useEffect(() => {
     const getSpace = async () => {
+       
+      setError(null);   // reset error before new request
       try {
-        const response = await fetch(`https://metapresense.onrender.com/api/v1/space/${spaceId}`, {
-          method: "GET",
-        });
+        const response = await fetch(`https://metapresense.onrender.com/api/v1/space/${spaceId}`);
+
+        if (!response.ok) {
+          throw new Error(`Space not connected or error ${response.status}`);
+        }
+
         const data = await response.json();
         console.log(data.space.elements);
         setElements(data.space.elements);
-      } catch (error) {
-        console.error("Error fetching space data:", error);
-      }
+      } catch (err:any) {
+        console.error("Error fetching space data:", err);
+        setError(err.message || "Something went wrong");
+      } 
     };
 
     if (spaceId) {
@@ -1439,6 +1447,27 @@ const Arena = () => {
   const position12 = {
     x:currentUser.x,
     y:currentUser.y
+  }
+
+  if (loading) {
+    return (
+      <MetaPresenceLoading/>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: '#fef2f2',
+        color: '#dc2626'
+      }}>
+        <p>Error: {error}</p>
+      </div>
+    );
   }
 
   return (
