@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const MetaPresenceLoading = () => {
   const [waveOffset, setWaveOffset] = useState(0);
-  const animationRef = useRef(null);
+
   const startTimeRef = useRef(null);
   
   // Continuous wave animation with immediate start
