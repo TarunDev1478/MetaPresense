@@ -491,131 +491,132 @@ const Arena = () => {
         });
         break;
         case 'message':
-          const isDirectMessage = message.payload.targetUserId !== undefined && message.payload.targetUserId !== '';
-          const isRoomMessage = message.payload.roomId !== undefined && message.payload.roomId !== '';
-        
-          const messageObj: Message = {
-            id: Date.now() + Math.random(), // Added randomness to ensure unique IDs
-            senderId: message.payload.senderId,
-            content: message.payload.content,
-            timestamp: message.payload.timestamp || new Date().toISOString(),
-            isDirect: isDirectMessage,
-            isDirectToMe: isDirectMessage && message.payload.targetUserId === currentUser.userId,
-            targetUserId: message.payload.targetUserId,
-            roomId: message.payload.roomId 
-          };
-        
-          if (isDirectMessage) {
-            // Handle private messages
-            if (message.payload.senderId === currentUser.userId) {
-              // Outgoing private message
-              const targetUserId = message.payload.targetUserId;
-              setPrivateMessageStore(prev => {
-                const prevState = prev || {};
-                const userMessages = Array.isArray(prevState[targetUserId]) ? prevState[targetUserId] : [];
-                const updatedMessages = [...userMessages, messageObj];
-        
-                try {
-                  localStorage.setItem('privateMessages', JSON.stringify({ ...prevState, [targetUserId]: updatedMessages }));
-                } catch (error) {
-                  console.error('Error saving to localStorage:', error);
-                }
-        
-                return {
-                  ...prevState,
-                  [targetUserId]: updatedMessages
-                };
-              });
-        
-              // Update current messages if viewing this conversation
-              if (showMessageDialog && selectedUser === targetUserId) {
-                setMessages(prevMessages => {
-                  const prevArray = Array.isArray(prevMessages) ? prevMessages : [];
-                  return [...prevArray, messageObj];
-                });
-              }
-            } else if (message.payload.targetUserId === currentUser.userId) {
-              // Incoming private message
-              const senderId = message.payload.senderId;
-              setPrivateMessageStore(prev => {
-                const prevState = prev || {};
-                const userMessages = Array.isArray(prevState[senderId]) ? prevState[senderId] : [];
-                const updatedMessages = [...userMessages, messageObj];
-        
-                try {
-                  localStorage.setItem('privateMessages', JSON.stringify({ ...prevState, [senderId]: updatedMessages }));
-                } catch (error) {
-                  console.error('Error saving to localStorage:', error);
-                }
-        
-                return {
-                  ...prevState,
-                  [senderId]: updatedMessages
-                };
-              });
-        
-              // Update current messages if viewing this conversation
-              if (showMessageDialog && selectedUser === senderId) {
-                setMessages(prevMessages => {
-                  const prevArray = Array.isArray(prevMessages) ? prevMessages : [];
-                  return [...prevArray, messageObj];
-                });
-              }
-            }
-          } else if (isRoomMessage) {
-            // Handle room message
-            const roomId = message.payload.roomId;
-            setRoomMessages(prev => {
-              const prevState = prev || {};
-              const roomMsgs = Array.isArray(prevState[roomId]) ? prevState[roomId] : [];
-              const updatedRoomMsgs = [...roomMsgs, messageObj];
-        
-              const newRoomMessages = {
-                ...prevState,
-                [roomId]: updatedRoomMsgs
-              };
-        
-              try {
-                localStorage.setItem('roomMessages', JSON.stringify(newRoomMessages));
-              } catch (error) {
-                console.error('Error saving to localStorage:', error);
-              }
-        
-              return newRoomMessages;
-            });
-        
-            // Update current messages if viewing this room
-            if (showMessageDialog && inroom.toString() === roomId.toString() && !selectedUser) {
-              setMessages(prevMessages => {
-                const prevArray = Array.isArray(prevMessages) ? prevMessages : [];
-                return [...prevArray, messageObj];
-              });
-            }
-          } else {
-            // Broadcast message
-            setBroadcastMessages(prev => {
-              const prevArray = Array.isArray(prev) ? prev : [];
-              const updatedMessages = [...prevArray, messageObj];
-        
-              try {
-                localStorage.setItem('broadcastMessages', JSON.stringify(updatedMessages));
-              } catch (error) {
-                console.error('Error saving to localStorage:', error);
-              }
-        
-              return updatedMessages;
-            });
-        
-            // Update current messages if viewing broadcast messages
-            if (showMessageDialog && inroom === 0 && !selectedUser) {
-              setMessages(prevMessages => {
-                const prevArray = Array.isArray(prevMessages) ? prevMessages : [];
-                return [...prevArray, messageObj];
-              });
-            }
-          }
-          setCount(count + 1);
-          break;
+  const isDirectMessage = message.payload.targetUserId !== undefined && message.payload.targetUserId !== '';
+  const isRoomMessage = message.payload.roomId !== undefined && message.payload.roomId !== '';
+
+  const messageObj: Message = {
+    id: Date.now() + Math.random(),
+    senderId: message.payload.senderId,
+    content: message.payload.content,
+    timestamp: message.payload.timestamp || new Date().toISOString(),
+    isDirect: isDirectMessage,
+    isDirectToMe: isDirectMessage && message.payload.targetUserId === currentUser.userId,
+    targetUserId: message.payload.targetUserId,
+    roomId: message.payload.roomId 
+  };
+
+  if (isDirectMessage) {
+    // Handle private messages
+    if (message.payload.senderId === currentUser.userId) {
+      // Outgoing private message - save under targetUserId
+      const targetUserId = message.payload.targetUserId;
+      setPrivateMessageStore(prev => {
+        const prevState = prev || {};
+        const userMessages = Array.isArray(prevState[targetUserId]) ? prevState[targetUserId] : [];
+        const updatedMessages = [...userMessages, messageObj];
+
+        try {
+          localStorage.setItem('privateMessages', JSON.stringify({ ...prevState, [targetUserId]: updatedMessages }));
+        } catch (error) {
+          console.error('Error saving outgoing private message to localStorage:', error);
+        }
+
+        return {
+          ...prevState,
+          [targetUserId]: updatedMessages
+        };
+      });
+
+      // Update current messages if viewing this conversation
+      if (showMessageDialog && selectedUser === targetUserId) {
+        setMessages(prevMessages => {
+          const prevArray = Array.isArray(prevMessages) ? prevMessages : [];
+          return [...prevArray, messageObj];
+        });
+      }
+    } else if (message.payload.targetUserId === currentUser.userId) {
+      // Incoming private message - save under senderId
+      const senderId = message.payload.senderId;
+      setPrivateMessageStore(prev => {
+        const prevState = prev || {};
+        const userMessages = Array.isArray(prevState[senderId]) ? prevState[senderId] : [];
+        const updatedMessages = [...userMessages, messageObj];
+
+        try {
+          localStorage.setItem('privateMessages', JSON.stringify({ ...prevState, [senderId]: updatedMessages }));
+          console.log('Saved incoming private message to localStorage for sender:', senderId);
+        } catch (error) {
+          console.error('Error saving incoming private message to localStorage:', error);
+        }
+
+        return {
+          ...prevState,
+          [senderId]: updatedMessages
+        };
+      });
+
+      // Update current messages if viewing this conversation
+      if (showMessageDialog && selectedUser === senderId) {
+        setMessages(prevMessages => {
+          const prevArray = Array.isArray(prevMessages) ? prevMessages : [];
+          return [...prevArray, messageObj];
+        });
+      }
+    }
+  } else if (isRoomMessage) {
+    // Handle room message
+    const roomId = message.payload.roomId;
+    setRoomMessages(prev => {
+      const prevState = prev || {};
+      const roomMsgs = Array.isArray(prevState[roomId]) ? prevState[roomId] : [];
+      const updatedRoomMsgs = [...roomMsgs, messageObj];
+
+      const newRoomMessages = {
+        ...prevState,
+        [roomId]: updatedRoomMsgs
+      };
+
+      try {
+        localStorage.setItem('roomMessages', JSON.stringify(newRoomMessages));
+      } catch (error) {
+        console.error('Error saving room message to localStorage:', error);
+      }
+
+      return newRoomMessages;
+    });
+
+    // Update current messages if viewing this room
+    if (showMessageDialog && inroom.toString() === roomId.toString() && !selectedUser) {
+      setMessages(prevMessages => {
+        const prevArray = Array.isArray(prevMessages) ? prevMessages : [];
+        return [...prevArray, messageObj];
+      });
+    }
+  } else {
+    // Broadcast message
+    setBroadcastMessages(prev => {
+      const prevArray = Array.isArray(prev) ? prev : [];
+      const updatedMessages = [...prevArray, messageObj];
+
+      try {
+        localStorage.setItem('broadcastMessages', JSON.stringify(updatedMessages));
+      } catch (error) {
+        console.error('Error saving broadcast message to localStorage:', error);
+      }
+
+      return updatedMessages;
+    });
+
+    // Update current messages if viewing broadcast messages
+    if (showMessageDialog && inroom === 0 && !selectedUser) {
+      setMessages(prevMessages => {
+        const prevArray = Array.isArray(prevMessages) ? prevMessages : [];
+        return [...prevArray, messageObj];
+      });
+    }
+  }
+  setCount(count + 1);
+  break;
       case 'message-sent':
         // Handle confirmation of message sent
         addSystemMessage(`Message delivered to ${message.payload.targetUserId}`);
